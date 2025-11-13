@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Drive 3D Pro - Ultimate Racing Experience</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a0a2e 50%, #2d0b4e 100%);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            background: linear-gradient(90deg, #8a2be2, #da70d6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: #da70d6;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav ul li a:hover {
+            color: #da70d6;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(90deg, #8a2be2, #da70d6);
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 60px 0;
+            min-height: 500px;
+        }
+
+        .hero-content {
+            flex: 1;
+            padding-right: 40px;
+        }
+
+        .hero-content h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #8a2be2, #da70d6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #cccccc;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(90deg, #8a2be2, #da70d6);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(218, 112, 214, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #da70d6;
+        }
+
+        .game-canvas-container {
+            flex: 1;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(218, 112, 214, 0.3);
+            height: 400px;
+            background: #0a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .game-stats {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(218, 112, 214, 0.3);
+        }
+
+        .stat {
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #da70d6;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .mobile-controls {
+            display: none;
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px;
+            border: 2px solid #da70d6;
+            color: #da70d6;
+            font-size: 24px;
+            cursor: pointer;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        .control-row {
+            display: flex;
+        }
+
+        .control-btn.active {
+            background: rgba(218, 112, 214, 0.3);
+        }
+
+        .features {
+            margin: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 36px;
+            background: linear-gradient(90deg, #8a2be2, #da70d6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(218, 112, 214, 0.3);
+            border-color: #da70d6;
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #da70d6;
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: #cccccc;
+            line-height: 1.6;
+        }
+
+        .cars {
+            margin: 80px 0;
+        }
+
+        .car-slider {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 20px 0;
+            scrollbar-width: thin;
+            scrollbar-color: #da70d6 #0a0a0a;
+        }
+
+        .car-slider::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .car-slider::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-radius: 10px;
+        }
+
+        .car-slider::-webkit-scrollbar-thumb {
+            background: #da70d6;
+            border-radius: 10px;
+        }
+
+        .car-card {
+            min-width: 280px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .car-card:hover {
+            transform: scale(1.05);
+            border-color: #da70d6;
+        }
+
+        .car-image {
+            height: 180px;
+            background: linear-gradient(135deg, #1a0a2e, #2d0b4e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .car-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(138, 43, 226, 0.1), rgba(218, 112, 214, 0.1));
+        }
+
+        .car-info {
+            padding: 20px;
+        }
+
+        .car-info h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .car-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .car-stat {
+            text-align: center;
+        }
+
+        .car-stat .label {
+            font-size: 12px;
+            color: #cccccc;
+        }
+
+        .car-stat .value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #da70d6;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 60px;
+            color: #cccccc;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+            }
+            
+            .hero-content {
+                padding-right: 0;
+                margin-bottom: 40px;
+            }
+            
+            .mobile-controls {
+                display: flex;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>Real Drive <span>3D Pro</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Cars</a></li>
+                    <li><a href="#">Tracks</a></li>
+                    <li><a href="#">Leaderboard</a></li>
+                    <li><a href="#">Settings</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Ultimate Hyper-Realistic Racing Experience</h2>
+                <p>Immerse yourself in the most realistic 3D racing game ever created. Experience stunning graphics, dynamic weather, and realistic physics that will push your driving skills to the limit.</p>
+                
+                <div class="button-group">
+                    <a href="#" class="btn" id="playBtn">Play Now</a>
+                    <a href="#" class="btn btn-secondary" id="garageBtn">Garage</a>
+                </div>
+            </div>
+            <div class="game-canvas-container">
+                <canvas id="gameCanvas"></canvas>
+                <div class="game-stats">
+                    <div class="stat">
+                        <div class="stat-label">SPEED</div>
+                        <div class="stat-value" id="speedValue">0 <small>km/h</small></div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">NITRO</div>
+                        <div class="stat-value" id="nitroValue">100%</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">LAP</div>
+                        <div class="stat-value" id="lapValue">1/3</div>
+                    </div>
+                </div>
+                <div class="mobile-controls">
+                    <div class="control-group">
+                        <div class="control-row">
+                            <div class="control-btn" id="leftBtn">←</div>
+                        </div>
+                        <div class="control-row">
+                            <div class="control-btn" id="upBtn">↑</div>
+                        </div>
+                        <div class="control-row">
+                            <div class="control-btn" id="rightBtn">→</div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" id="nitroBtn" style="background: linear-gradient(90deg, #8a2be2, #da70d6);">N</div>
+                        <div class="control-btn" id="pauseBtn">⏸️</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <h2 class="section-title">Game Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🚗</div>
+                    <h3>Hyper-Realistic Cars</h3>
+                    <p>Choose from 5 high-performance vehicles, each with unique handling, speed, and customization options.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌆</div>
+                    <h3>Dynamic Environments</h3>
+                    <p>Race through 4 stunning maps: City Highway, Desert Track, Mountain Drift, and Night Mode with real-time lighting.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚙️</div>
+                    <h3>Advanced Physics</h3>
+                    <p>Experience realistic car physics including acceleration, drift, collisions, and visual damage systems.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3>Multiple Control Schemes</h3>
+                    <p>Play with touch controls, gamepad, or keyboard. Fully optimized for both desktop and mobile devices.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cars">
+            <h2 class="section-title">Select Your Car</h2>
+            <div class="car-slider">
+                <div class="car-card">
+                    <div class="car-image">
+                        <span style="font-size: 80px;">🚓</span>
+                    </div>
+                    <div class="car-info">
+                        <h3>Velocity R8</h3>
+                        <div class="car-stats">
+                            <div class="car-stat">
+                                <div class="label">SPEED</div>
+                                <div class="value">9.5/10</div>
+                            </div>
+                            <div class="car-stat">
+                                <div class="label">HANDLING</div>
+                                <div class="value">8/10</div>
+                            </div>
+                            <div class="car-stat">
+                                <div class="label">NITRO</div>
+                                <div class="value">7/10</div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn" style="width: 100%; text-align: center;">Select</a>
+                    </div>
+                </div>
+                <div class="car-card">
+                    <div class="car-image">
+                        <span style="font-size: 80px;">🏎️</span>
+                    </div>
+                    <div class="car-info">
+                        <h3>Phantom X1</h3>
+                        <div class="car-stats">
+                            <div class="car-stat">
+                                <div class="label">SPEED</div>
+                                <div class="value">10/10</div>
+                            </div>
+                            <div class="car-stat">
+                                <div class="label">HANDLING</div>
+                                <div class="value">7/10</div>
+                            </div>
+                            <div class="car-stat">
+                                <div class="label">NITRO</div>
+                                <div class="value">8/10</div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn" style="width: 100%; text-align: center;">Select</a>
+                    </div>
+                </div>
+                <div class="car-card">
+                    <div class="car-image">
+                        <span style="font-size: 80px;">🚙</span>
+                    </div>
+                    <div class="car-info">
+                        <h3>Drift King</h3>
+                        <div class="car-stats">
+                            <div class="car-stat">
+                                <div class="label">SPEED</div>
+                                <div class="value">7/10</div>
+                            </div>
+                            <div class="car-stat">
+                                <div class="label">HANDLING</div>
+                                <div class="value">10/10</div>
+                            </div>
+                            <div class="car-stat">
+                                <div class="label">NITRO</div>
+                                <div class="value">6/10</div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn" style="width: 100%; text-align: center;">Select</a>
+                    </div>
+                </div>
+                <div class="car-card">
+                    <div class="car-image">
+                        <span style="font-size: 80px;">🚘</span>
+                    </div>
+                    <div class="car-info">
+                        <h3>Night Hawk</h3>
+                        <div class="car-stats">
+                            <div class="car-stat">
+                                <div class="label">SPEED</div>
+                                <div class="value">8/10</div>
+                            </div>
+                            <div class="car-stat">
+                                <div class="label">HANDLING</div>
+                                <div class="value">9/10</div>
+                            </div>
+                            <div class="car-stat">
+                                <div class="label">NITRO</div>
+                                <div class="value">9/10</div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn" style="width: 100%; text-align: center;">Select</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Real Drive 3D Pro - Ultimate Racing Experience &copy; 2023 | Powered by Three.js & WebGL</p>
+        </footer>
+    </div>
+
+    <script>
+        // Game state variables
+        let gameActive = false;
+        let carSpeed = 0;
+        let carRotation = 0;
+        let nitro = 100;
+        let lap = 1;
+        let maxLaps = 3;
+        
+        // Control state variables
+        let isAccelerating = false;
+        let isBraking = false;
+        let isTurningLeft = false;
+        let isTurningRight = false;
+        let isNitroActive = false;
+        
+        // DOM elements
+        const canvas = document.getElementById('gameCanvas');
+        const speedValue = document.getElementById('speedValue');
+        const nitroValue = document.getElementById('nitroValue');
+        const lapValue = document.getElementById('lapValue');
+        const playBtn = document.getElementById('playBtn');
+        const garageBtn = document.getElementById('garageBtn');
+        
+        // Mobile control elements
+        const leftBtn = document.getElementById('leftBtn');
+        const upBtn = document.getEleme
